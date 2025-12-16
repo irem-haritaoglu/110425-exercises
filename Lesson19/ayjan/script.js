@@ -39,51 +39,51 @@ Price:
 const itemsInTheStore = {
   carrots: {
     amount: 0.99,
-    currency: 'EUR',
+    currency: "EUR",
   },
   potatoes: {
     amount: 0.49,
-    currency: 'EUR',
+    currency: "EUR",
   },
   milk: {
     amount: 1.49,
-    currency: 'EUR',
+    currency: "EUR",
   },
   cucumber: {
     amount: 1.49,
-    currency: 'EUR',
+    currency: "EUR",
   },
 };
 
 class ShoppingCart {
   constructor() {
     this.items = [
-      { name: 'Carrots', quantity: 10, price: itemsInTheStore.carrots.amount },
+      { name: "Carrots", quantity: 10, price: itemsInTheStore.carrots.amount },
     ];
   }
 
   viewCart() {
     // TODO: print a different message if the cart is empty
-    console.log('Cart Items');
+    console.log("Cart Items");
     for (let i = 0; i < this.items.length; i++) {
       const currentItem = this.items[i];
       console.log(
-        `${currentItem.name} - ${currentItem.quantity} - ${currentItem.price}`,
+        `${currentItem.name} - ${currentItem.quantity} - ${currentItem.price}`
       );
     }
-    console.log('.................');
+    console.log(".................");
   }
 
   addItem(name, quantity, price) {
     for (let i = 0; i < this.items.length; i++) {
       if (this.items[i].name === name) {
         console.log(
-          `Item ${name} already exists in the cart, updating quantity...`,
+          `Item ${name} already exists in the cart, updating quantity...`
         );
         this.items[i].quantity = this.items[i].quantity + quantity;
         return;
       } else {
-        console.log('Adding an item to cart...');
+        console.log("Adding an item to cart...");
         this.items.push({ name, quantity, price });
         return;
       }
@@ -96,65 +96,58 @@ class ShoppingCart {
     for (let i = 0; i < itemsArray.length; i++) {
       if (itemsArray[i].name === name) {
         itemsArray.splice(i, 1);
-        console.log(`Item ${name} is removed from the cart.`)
+        console.log(`Item ${name} is removed from the cart.`);
         return;
       }
     }
-    console.log(`Item ${name} is not found in the cart.`)
+    console.log(`Item ${name} is not found in the cart.`);
+  
   }
+
   getTotal() {
-    if (this.items.length === 0) {
-      console.log('The cart is empty');
-      return 0;
+    let total = 0;
+    const itemsArray = this.items;
+    for (let i = 0; i < itemsArray.length; i++) {
+      total += itemsArray[i].price * itemsArray[i].quantity;
     }
-    const total = this.items.reduce((acc, item) => {
-      return acc + item.price * item.quantity;
-    }, 0);
+    console.log(`Total cost: ${total} EUR`);
     return total;
   }
-
-  applyDiscount(code) {
-    const discounts = {
-      SAVE10: 0.1,
-      SAVE20: 0.2,
-      SAVE30: 0.3,
-    };
-
-    if (!discounts[code]) {
-      console.log('Invalid discount code');
-      return this.getTotal(); // return the original total if the code is invalid
+ applyDiscount(Code){
+   const discountCodes = {
+     'SAVE10': 10,
+     'SAVE20': 20,
+   };
+    const total=this.getTotal();
+    const discount = discountCodes[Code];
+    if(discount){
+      const discountedTotal = total - (total * discount / 100);
+      console.log(`Discount code ${Code} applied. New total: ${discountedTotal} EUR`);
+      return discountedTotal;
     }
-
-    const total = this.getTotal();
-    const discountAmount = total * discounts[code];
-    const newTotal = this.rounded(total - discountAmount);
-
-    console.log(`Discount code applied. New total is: ${newTotal} EUR`);
-    return newTotal;
-  }
-
-
+    console.log(`Invalid discount code: ${Code}`);
+    return total;
+ }
 }
-
-
-
-
-
 
 const groceryCart = new ShoppingCart();
 groceryCart.viewCart();
 
-groceryCart.addItem('Cucumber', 20, itemsInTheStore.cucumber.amount);
-groceryCart.addItem('Carrots', 2, itemsInTheStore.carrots.amount);
+groceryCart.addItem("Cucumber", 20, itemsInTheStore.cucumber.amount);
+groceryCart.addItem("Carrots", 2, itemsInTheStore.carrots.amount);
 
 groceryCart.viewCart();
 
 groceryCart.removeItem(`Cucumber`);
 groceryCart.viewCart();
-groceryCart.getTotal();
-groceryCart.applyDiscount('SAVE10');
-groceryCart.applyDiscount('XXX');
 
+
+groceryCart.getTotal();
+groceryCart.viewCart();
+
+groceryCart.applyDiscount('SAVE10');
+groceryCart.applyDiscount('SAVE50');
+groceryCart.viewCart();
 
 /*
 -----------------------------------------------------------
@@ -187,7 +180,6 @@ groceryCart.applyDiscount('XXX');
    - Calculate and return the total cost of all items in 
      the cart.
 */
-
 
 /*
 -----------------------------------------------------------
